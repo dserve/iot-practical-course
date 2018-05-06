@@ -16,6 +16,7 @@ echo p
 echo w
 ) | fdisk /dev/vda
 df -Th
+partprobe /dev/vda
 resize2fs /dev/vda1
 echo partition should be resized
 df -Th
