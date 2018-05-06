@@ -1,5 +1,7 @@
 #!/bin/bash
 # resize partition
+echo resize partition
+df -Th
 (
 echo d
 echo n
@@ -13,7 +15,10 @@ echo a
 echo p
 echo w
 ) | fdisk /dev/vda
+df -Th
 resize2fs /dev/vda1
+echo partition should be resized
+df -Th
 # remove lock files to prevent apt-get update from failing
 sudo rm /var/cache/apt/archives/lock
 sudo rm /var/lib/dpkg/lock
