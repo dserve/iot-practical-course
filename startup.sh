@@ -1,4 +1,19 @@
 #!/bin/bash
+# resize partition
+(
+echo d
+echo n
+echo p
+echo 1
+echo 
+echo 
+echo t
+echo 83
+echo a
+echo p
+echo w
+) | fdisk /dev/vda
+resize2fs /dev/vda1
 # remove lock files to prevent apt-get update from failing
 sudo rm /var/cache/apt/archives/lock
 sudo rm /var/lib/dpkg/lock
