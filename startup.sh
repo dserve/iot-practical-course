@@ -47,12 +47,19 @@ sudo apt install oracle-java8-installer -y
 # Zookeeper
 sudo apt install zookeeperd -y
 
+# Download all packages
+cd ~
+wget http://apache.lauf-forum.at/kafka/1.1.0/kafka_2.12-1.1.0.tgz &
+wget http://apache.lauf-forum.at/flink/flink-1.4.2/flink-1.4.2-bin-hadoop28-scala_2.11.tgz &
+wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.3.tar.gz &
+wait
+
+
 # Kafka and relevant packages
 
-wget http://apache.lauf-forum.at/kafka/1.1.0/kafka_2.12-1.1.0.tgz
 sudo tar -xvf kafka_2.12-1.1.0.tgz -C /opt
 rm kafka_2.12-1.1.0.tgz
-sudo apt install python3-pip
+sudo apt install python3-pip -y
 sudo pip3 install kafka-python
 cd /opt/kafka_2.12-1.1.0
 sudo ./bin/kafka-server-start.sh &
@@ -60,7 +67,6 @@ cd ~
 
 # Flink
 
-wget http://apache.lauf-forum.at/flink/flink-1.4.2/flink-1.4.2-bin-hadoop28-scala_2.11.tgz
 sudo tar -xvf flink-1.4.2-bin-hadoop28-scala_2.11.tgz -C /opt
 rm flink-1.4.2-bin-hadoop28-scala_2.11.tgz
 cd /opt/flink-1.4.2-bin-hadoop28-scala_2.11
@@ -69,19 +75,26 @@ cd ~
 
 # Elasticsearch:
 
-adduser yourname
-su yourname
+(
+echo 7632blabla
+echo 7632blabla
+echo
+echo
+echo
+echo
+echo
+echo Y
+) | adduser yourname
 cd ~
-wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.3.tar.gz
 tar -xvf elasticsearch-5.6.3.tar.gz -C /opt
 rm elasticsearch-5.6.3.tar.gz
 cd /opt/elasticsearch-5.6.3
-./bin/elasticsearch &
+su yourname -c "./bin/elasticsearch &"
 cd ~
 
 # Maven
 
-sudo apt-get install maven
+sudo apt-get install maven -y
 
 # Node & NPM
 
