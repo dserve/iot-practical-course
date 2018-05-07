@@ -62,8 +62,13 @@ rm kafka_2.12-1.1.0.tgz
 sudo apt install python3-pip -y
 sudo pip3 install kafka-python
 cd /opt/kafka_2.12-1.1.0
-sudo ./bin/kafka-server-start.sh &
+sudo ./bin/kafka-server-start.sh
+./bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic testing
+./bin/kafka-topics.sh --list --zookeeper localhost:2181
+./bin/kafka-consoleproducer.sh --broker-list localhost:9092 --topic testing
+./bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic testing –from-beginning
 cd ~
+
 
 # Flink
 
@@ -71,6 +76,8 @@ sudo tar -xvf flink-1.4.2-bin-hadoop28-scala_2.11.tgz -C /opt
 rm flink-1.4.2-bin-hadoop28-scala_2.11.tgz
 cd /opt/flink-1.4.2-bin-hadoop28-scala_2.11
 sudo ./bin/start-local &
+wget -O hamlet.txt http://www.gutenberg.org/cache/epub/1787/pg1787.txt
+./bin/flink run ./examples/batch/WordCount.jar --file://opt/flink-1.4.2-bin-hadoop28-scala_2.11/hamlet.txt
 cd ~
 
 # Elasticsearch:
@@ -89,7 +96,11 @@ cd ~
 tar -xvf elasticsearch-5.6.3.tar.gz -C /opt
 rm elasticsearch-5.6.3.tar.gz
 cd /opt/elasticsearch-5.6.3
-su yourname -c "./bin/elasticsearch &"
+su yourname -c "./bin/elasticsearch"
+curl -XPUT 'localhost:9200/testindex?pretty&pretty'
+curl -XGET 'localhost:9200/_cat/indices?v&pretty'
+curl -XPUT 'localhost:9200/testindex/agents/1?pretty&pretty' -H 'Content-Type: application/json' -d ' { "name": "James Bond" } '
+curl -XGET 'localhost:9200/testindex/agents/1?pretty&pretty'
 cd ~
 
 # Maven
