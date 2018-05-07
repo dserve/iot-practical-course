@@ -1,0 +1,1 @@
+git clone https://github.com/dserve/iot-practical-course.git && cd iot-practical-course && sudo chmod +x startup.sh && ./startup.sh
