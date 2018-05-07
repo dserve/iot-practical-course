@@ -98,5 +98,6 @@ sudo apt-get install maven -y
 
 # Node & NPM
 
-sudo apt install nodejs
-sudo apt install npm
+sudo apt install nodejs -y
+sudo apt install npm -y
+sudo ln -s `which nodejs` /usr/bin/node
