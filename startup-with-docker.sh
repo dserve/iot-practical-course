@@ -47,4 +47,5 @@ chmod +x /usr/local/bin/docker-compose
 # increase virtual memory size for elasticsearch
 sysctl -w vm.max_map_count=262144
 # accept incoming messages for kafka
-#iptables -I INPUT -p tcp -m tcp --dport 9092 -j ACCEPT
+iptables -I INPUT -p tcp -m tcp --dport 9092 -j ACCEPT
+docker-compose up
