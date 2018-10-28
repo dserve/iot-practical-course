@@ -1,0 +1,36 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: hello-app
+  name: hello-app
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: hello-app
+    spec:
+      containers:
+      - image: gcr.io/google-samples/hello-app:1.0
+        name: hello-app
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: "20m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: hello-app
+  name: hello-app
+spec:
+  type: LoadBalancer
+  ports:
+  - name: "8080"
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: hello-app

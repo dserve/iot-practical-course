@@ -1,0 +1,88 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: flink-jobmanager
+  name: flink-jobmanager
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: flink-jobmanager
+    spec:
+      containers:
+      - args:
+        - jobmanager
+        env:
+        - name: JOB_MANAGER_RPC_ADDRESS
+          value: flink-jobmanager-rpc
+        image: flink
+        name: flink-jobmanager
+        ports:
+        - containerPort: 8081
+        resources:
+          requests:
+            cpu: "20m"
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: flink-taskmanager
+  name: flink-taskmanager
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: flink-taskmanager
+    spec:
+      containers:
+      - args:
+        - taskmanager
+        env:
+        - name: JOB_MANAGER_RPC_ADDRESS
+          value: flink-jobmanager-rpc
+        - name: TASK_MANAGER_NUMBER_OF_TASK_SLOTS
+          value: "10"
+        image: flink
+        name: flink-taskmanager
+        resources:
+          requests:
+            cpu: "20m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: flink-jobmanager
+  name: flink-jobmanager-rpc
+spec:
+  ports:
+  - name: "6123"
+    port: 6123
+    targetPort: 6123
+  - name: "6124"
+    port: 6124
+    targetPort: 6124
+  - name: "6125"
+    port: 6125
+    targetPort: 6125
+  selector:
+    app: flink-jobmanager
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: flink-jobmanager
+  name: flink-jobmanager
+spec:
+  type: LoadBalancer
+  ports:
+  - name: "8081"
+    port: 8081
+    targetPort: 8081
+  selector:
+    app: flink-jobmanager

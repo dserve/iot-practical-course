@@ -1,0 +1,45 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: elasticsearch
+  name: elasticsearch
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: elasticsearch
+    spec:
+      containers:
+      - env:
+        - name: discovery.type
+          value: single-node
+        - name: xpack.security.enabled
+          value: "false"
+        image: docker.elastic.co/elasticsearch/elasticsearch:5.6.9
+        name: elasticsearch
+        ports:
+        - containerPort: 9200
+        - containerPort: 9300
+        resources:
+          requests:
+            cpu: "20m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: elasticsearch
+  name: elasticsearch
+spec:
+  type: LoadBalancer
+  ports:
+  - name: "9200"
+    port: 9200
+    targetPort: 9200
+  - name: "9300"
+    port: 9300
+    targetPort: 9300
+  selector:
+    app: elasticsearch
