@@ -13,6 +13,9 @@ import org.elasticsearch.client.Requests;
 
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -39,7 +42,7 @@ public class ConnectKafkaAndFlink {
 
     public static DataStream<String> readFromKafka(StreamExecutionEnvironment env) throws Exception {
         Properties properties = new Properties();
-        properties.setProperty("bootstrap.servers", "localhost:9092");
+        properties.setProperty("bootstrap.servers", "kafka-internal:9092");
         properties.setProperty("group.id", "flink_consumer");
 
         DataStream<String> stream = env.addSource(new FlinkKafkaConsumer011<>(
@@ -51,24 +54,27 @@ public class ConnectKafkaAndFlink {
 
     public static void writeToElasticsearch(DataStream<String> input) throws UnknownHostException {
         Map<String, String> config = new HashMap<>();
-        config.put("cluster.name", "my-application");
+        config.put("cluster.name", "docker-cluster");
         // This instructs the sink to emit after every element, otherwise they would be buffered
         config.put("bulk.flush.max.actions", "1");
         config.put("node.name", "node-1");
         try {
             // Add elasticsearch hosts on startup
-            List<InetSocketAddress> transports = new ArrayList<>();
-            transports.add(new InetSocketAddress("localhost", 9300)); // port is 9300 not 9200 for ES TransportClient
+            List<InetSocketAddress> transportAddresses = new ArrayList<>();
+            transportAddresses.add(new InetSocketAddress("elasticsearch", 9300)); // port is 9300 not 9200 for ES TransportClient
 
             ElasticsearchSinkFunction<String> indexLog = new ElasticsearchSinkFunction<String>() {
                 public IndexRequest createIndexRequest(String element) {
+                    String timestamp = ZonedDateTime.now( ZoneOffset.UTC ).format( DateTimeFormatter.ISO_INSTANT );
                     Map<String, String> esJson = new HashMap<>();
                     esJson.put("value", element);
+                    esJson.put("timestamp", timestamp);
 
                     return Requests
                             .indexRequest()
                             .index("testindex")
-                            .type("temperature")
+                            .type("closed")
+                            .timestamp(timestamp)
                             .source(esJson);
                 }
 
@@ -78,7 +84,7 @@ public class ConnectKafkaAndFlink {
                 }
             };
 
-            ElasticsearchSink esSink = new ElasticsearchSink(config, transports, indexLog);
+            ElasticsearchSink esSink = new ElasticsearchSink(config, transportAddresses, indexLog);
             input.addSink(esSink);
         } catch (Exception e) {
             System.out.println(e);

@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: kibana
+  name: kibana
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kibana
+    spec:
+      containers:
+      - env:
+        - name: ELASTICSEARCH_URL
+          value: http://elasticsearch:9200
+        image: kibana:5
+        name: kibana
+        ports:
+        - containerPort: 5601
+        resources:
+          requests:
+            cpu: "20m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: kibana
+  name: kibana
+spec:
+  type: LoadBalancer
+  ports:
+  - name: "5601"
+    port: 5601
+    targetPort: 5601
+  selector:
+    app: kibana

@@ -16,7 +16,7 @@ spec:
         - name: JMX_PORT
           value: "1099"
         - name: KAFKA_ADVERTISED_LISTENERS
-          value: INSIDE://kafka-internal:9092,OUTSIDE://35.228.71.116:9094
+          value: INSIDE://kafka-internal:9092,OUTSIDE://35.185.56.153:9094
         - name: KAFKA_INTER_BROKER_LISTENER_NAME
           value: INSIDE
         - name: KAFKA_JMX_OPTS
@@ -83,7 +83,7 @@ metadata:
   name: kafka-external
 spec:
   type: LoadBalancer
-  loadBalancerIP: "35.228.71.116"
+  loadBalancerIP: "35.185.56.153"
   ports:
   - name: "9094"
     port: 9094
