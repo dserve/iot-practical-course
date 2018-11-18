@@ -16,7 +16,7 @@ spec:
         - name: JMX_PORT
           value: "1099"
         - name: KAFKA_ADVERTISED_LISTENERS
-          value: INSIDE://kafka-internal:9092,OUTSIDE://35.185.56.153:9094
+          value: INSIDE://kafka-internal:9092,OUTSIDE://35.185.115.105:9094
         - name: KAFKA_INTER_BROKER_LISTENER_NAME
           value: INSIDE
         - name: KAFKA_JMX_OPTS
@@ -29,7 +29,7 @@ spec:
           value: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
         - name: KAFKA_ZOOKEEPER_CONNECT
           value: zookeeper:2181
-        image: wurstmeister/kafka
+        image: wurstmeister/kafka:2.11-0.11.0.3
         name: kafka-app
         ports:
         - containerPort: 9094
@@ -83,7 +83,7 @@ metadata:
   name: kafka-external
 spec:
   type: LoadBalancer
-  loadBalancerIP: "35.185.56.153"
+  loadBalancerIP: "35.185.115.105"
   ports:
   - name: "9094"
     port: 9094

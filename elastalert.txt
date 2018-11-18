@@ -1,0 +1,2 @@
+elastalert-create-index
+python -m elastalert.elastalert --verbose --rule rules/example_change.yaml

@@ -1,0 +1,10 @@
+./bin/kafka-console-producer.sh \
+    --broker-list 35.185.115.105:9094 \
+    --topic testing
+    
+./bin/kafka-console-consumer.sh \
+    --bootstrap-server 35.185.115.105:9094 \
+    --topic testing \
+    --from-beginning
+    
+./bin/kafka-topics.sh --bootstrap-server 35.185.115.105:9094 --version

@@ -68,11 +68,12 @@ public class ConnectKafkaAndFlink {
                     String timestamp = ZonedDateTime.now( ZoneOffset.UTC ).format( DateTimeFormatter.ISO_INSTANT );
                     Map<String, String> esJson = new HashMap<>();
                     esJson.put("value", element);
-                    esJson.put("timestamp", timestamp);
+                    esJson.put("@timestamp", timestamp);
+                    esJson.put("id", "door-1");
 
                     return Requests
                             .indexRequest()
-                            .index("testindex")
+                            .index("doorindex")
                             .type("closed")
                             .timestamp(timestamp)
                             .source(esJson);
